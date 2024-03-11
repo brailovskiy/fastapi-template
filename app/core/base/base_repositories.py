@@ -16,14 +16,14 @@ class BasePostgresRepository:
             async_session.add_all(objects)
             await async_session.commit()
 
-    async def _execute_query_and_return_result(self, query: Select | Update) -> Any:
+    async def _execute_query_and_return_result(self, query: Select[Any] | Update) -> Any:
         async with self.postgres.session() as async_session:
             result = await async_session.execute(query)
             await async_session.commit()
         return result
 
-    async def _execute_query_and_return_scalar(self, query: Select) -> Any:
+    async def _execute_query_and_return_scalar(self, query: Select[Any]) -> Any:
         return (await self._execute_query_and_return_result(query)).scalar()
 
-    async def _execute_query_and_return_scalars(self, query: Select) -> list[Any]:
+    async def _execute_query_and_return_scalars(self, query: Select[Any]) -> list[Any]:
         return (await self._execute_query_and_return_result(query)).scalars().all()

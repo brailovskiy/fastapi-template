@@ -8,7 +8,7 @@ from app.core.example.schemas.dto import ExampleDTO
 
 @dataclass
 class ExampleService:
-    repository: ExampleDBRepository | None = None
+    repository: ExampleDBRepository
 
     @staticmethod
     async def create_test_task(example_param: str = "example") -> None:

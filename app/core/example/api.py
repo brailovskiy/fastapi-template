@@ -38,7 +38,7 @@ async def create_example_task(
     description="Get all models Example",
     name="examples:get-all-by-id",
 )
-async def get_one_example(service: ExampleService = Depends(get_example_service)) -> list[ExampleDTO]:
+async def get_list_example(service: ExampleService = Depends(get_example_service)) -> list[ExampleDTO]:
     items = await service.get_all_items()
 
     return items

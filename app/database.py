@@ -6,7 +6,7 @@ from typing import Any
 
 from loguru import logger
 from sqlalchemy import literal, select
-from sqlalchemy.ext.asyncio import (  # type: ignore
+from sqlalchemy.ext.asyncio import (
     AsyncSession,
     async_scoped_session,
     async_sessionmaker,

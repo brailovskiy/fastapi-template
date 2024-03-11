@@ -6,7 +6,7 @@ from app.database import Database
 from app.deps import get_postgres_client
 
 
-def get_example_database_repository(postgres: Database = Depends(get_postgres_client())) -> ExampleDBRepository:
+def get_example_database_repository(postgres: Database = Depends(get_postgres_client)) -> ExampleDBRepository:
     return ExampleDBRepository(postgres=postgres)
 
 

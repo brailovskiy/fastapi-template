@@ -12,10 +12,6 @@ config: Settings = get_settings()
 
 
 class Application:
-    def __init__(self, app_config: Settings):
-        self.config = app_config
-        self.app: FastAPI
-
     def setup(self) -> FastAPI:
         self.app: FastAPI = FastAPI(
             version=__version__,
@@ -42,8 +38,8 @@ class Application:
         """Add your middlewares here."""
 
     def create_database_pool(self) -> None:
-        databases: dict = {}
-        settings = self.config
+        databases = {}
+        settings = config
         for db_alias in settings.DB_READABLE_NAMES:
             uri = getattr(settings, f"{db_alias}_SQLALCHEMY_DATABASE_URI")
             pool_size = getattr(settings, f"{db_alias}_POOL_SIZE")
@@ -73,7 +69,7 @@ class Application:
 
 
 def get_app(app_configuration: Settings = config) -> FastAPI:
-    application = Application(app_configuration).setup()
+    application = Application().setup()
     logger.debug("Loaded configuration\n %s" % dump_config(app_configuration))  # noqa
     init_logging(app_configuration)
 

@@ -28,7 +28,7 @@ class AsyncPersistenceHandler(Generic[_OrmModel]):
         result = []
         async with self.db.session() as session:
             for obj in objs:
-                primary_keys = inspect(obj.__class__).primary_key
+                primary_keys = inspect(obj.__class__).primary_key  # type: ignore[union-attr]
                 query = select(obj.__class__).where(
                     and_(*{getattr(obj.__class__, pk.key) == getattr(obj, pk.key) for pk in primary_keys}),
                 )

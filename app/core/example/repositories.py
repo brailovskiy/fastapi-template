@@ -14,7 +14,7 @@ class ExampleDBRepository(BasePostgresRepository):
         query = select(Example)
         query_result = await self._execute_query_and_return_scalars(query)
 
-        type_annotation: TypeAdapter = TypeAdapter(list[ExampleDTO])
+        type_annotation = TypeAdapter(list[ExampleDTO])
         result = type_annotation.validate_python(query_result)
 
         return result

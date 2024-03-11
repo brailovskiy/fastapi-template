@@ -3,12 +3,11 @@ from enum import Enum
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, ClassVar
-from pydantic_settings import BaseSettings, SettingsConfigDict
+
 from kombu import Exchange, Queue
-from pydantic import (
-    field_validator,
-)
+from pydantic import field_validator
 from pydantic_core.core_schema import ValidationInfo
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy.engine import URL
 
 PROJ_ROOT = Path(__file__).parent.parent
@@ -45,14 +44,14 @@ class DBSettings(BaseSettings):
     POSTGRES_DB: str = "example"
     POSTGRES_POOL_SIZE: int = 5
 
-    POSTGRES_SQLALCHEMY_DATABASE_URI: URL = None
+    POSTGRES_SQLALCHEMY_DATABASE_URI: URL = None  # type: ignore[assignment]
 
     @staticmethod
     def _make_db_uri(
-            prefix: str,
-            driver: str,
-            value: str | None,
-            values: dict[str, Any],
+        prefix: str,
+        driver: str,
+        value: str | None,
+        values: dict[str, Any],
     ) -> URL:
         """
         Возвращает uri для заданной базы
@@ -66,7 +65,8 @@ class DBSettings(BaseSettings):
             str - uri для заданного шарда dbp
         """
         if isinstance(value, str):
-            return URL.value
+            return URL.value  # type: ignore[attr-defined]
+
         return URL.create(
             drivername=driver,
             database=values.get(f"{prefix}_DB"),
@@ -76,7 +76,7 @@ class DBSettings(BaseSettings):
             port=values.get(f"{prefix}_PORT"),
         )
 
-    @field_validator("POSTGRES_SQLALCHEMY_DATABASE_URI", mode='before')
+    @field_validator("POSTGRES_SQLALCHEMY_DATABASE_URI", mode="before")
     def postgres_dsn(cls, value: str | None, values: ValidationInfo) -> URL:
         return cls._make_db_uri(
             prefix="POSTGRES",

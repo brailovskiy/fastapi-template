@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import Database, PostgresBase
 from app.deps import get_database_clients, get_postgres_client
-from settings.config import Settings, get_settings, ENV_LOCAL_TEST
+from settings.config import ENV_LOCAL_TEST, Settings, get_settings
 
 
 @pytest.fixture(scope="session")
@@ -26,17 +26,18 @@ def test_settings() -> Settings:
 
 
 @pytest.fixture(scope="session")
-def test_app(test_settings) -> FastAPI:
+def test_app(test_settings: Settings) -> FastAPI:
     from app.main import get_app
 
     return get_app(test_settings)
+
 
 @pytest.fixture(scope="session")
 def db_instance(test_settings: Settings) -> Generator[Database, Any, Any]:
     db_async_dsn = test_settings.POSTGRES_SQLALCHEMY_DATABASE_URI
     connect_kwargs = dict(**Database.CONNECT_KWARGS, pool_size=5)
     async_db = Database(
-        db_connect_url=db_async_dsn,  # noqa
+        db_connect_url=db_async_dsn,  # type: ignore
         db_alias="postgres",
         connect_kwargs=connect_kwargs,
         debug=test_settings.DEBUG,
@@ -64,7 +65,7 @@ async def rest_client(
     def _get_db_clients_override() -> dict[str, Database]:
         return {"postgres": db_instance}
 
-    test_app.dependency_overrides[get_postgres_client()] = _get_postgres_override
+    test_app.dependency_overrides[get_postgres_client] = _get_postgres_override
     test_app.dependency_overrides[get_database_clients] = _get_db_clients_override
     async with AsyncClient(
         app=test_app,

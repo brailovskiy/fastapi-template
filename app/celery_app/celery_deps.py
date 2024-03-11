@@ -2,6 +2,7 @@ import asyncio
 
 from celery import Task
 
+from app.core.example.repositories import ExampleDBRepository
 from app.core.example.services import ExampleService
 from app.database import Database
 from settings.config import Settings, get_settings
@@ -16,7 +17,7 @@ class CeleryTask(Task):
         self.loop = asyncio.get_event_loop()
 
 
-def get_database(db_alias: str = 'POSTGRES') -> Database:
+def get_database(db_alias: str = "POSTGRES") -> Database:
     settings: Settings = get_settings()
     return Database(
         db_connect_url=getattr(settings, f"{db_alias}_SQLALCHEMY_DATABASE_URI"),
@@ -26,5 +27,9 @@ def get_database(db_alias: str = 'POSTGRES') -> Database:
     )
 
 
+def get_example_database_repository() -> ExampleDBRepository:
+    return ExampleDBRepository(postgres=get_database())
+
+
 def get_example_service() -> ExampleService:
-    return ExampleService()
+    return ExampleService(repository=get_example_database_repository())
