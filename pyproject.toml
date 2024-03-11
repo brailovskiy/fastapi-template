@@ -1,0 +1,285 @@
+[tool.poetry]
+name = "fast-api-template"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+
+[tool.poetry.dependencies]
+fastapi = "^0.110.0"
+python = "^3.12"
+httpx = "^0.27.0"
+asyncpg = "^0.29.0"
+python-multipart = "^0.0.9"
+python-dotenv = "^1.0.1"
+loguru = "^0.7.2"
+sqlalchemy = "^2.0.28"
+pydantic = "^2.6.3"
+celery = "^5.3.6"
+uvicorn = "^0.28.0"
+orjson = "^3.9.15"
+pyhumps = "^3.8.0"
+pydantic-settings = "^2.2.1"
+alembic = "^1.13.1"
+polyfactory = "^2.15.0"
+sentry-sdk = "^1.41.0"
+redis = "^5.0.3"
+more-itertools = "^10.2.0"
+
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+pytest-asyncio = "^0.21.1"
+coverage = "^7.3.0"
+isort = "^5.12.0"
+black = "^23.7.0"
+respx = "^0.20.2"
+flake8 = "^6.1.0"
+flake8-logging-format = "^0.9.0"
+flake8-comprehensions = "^3.14.0"
+flake8-pytest-style = "^1.7.2"
+flake8-bandit = "^4.1.1"
+flake8-fixme = "^1.1.1"
+flake8-simplify = "^0.20.0"
+flake8-variables-names = "^0.0.6"
+flake8-bugbear = "^23.7.10"
+flake8-debugger = "^4.1.2"
+flake8-annotations = "^3.0.1"
+flake8-pyproject = "^1.2.3"
+autoflake = "^2.2.0"
+pytest-fastapi-deps = "^0.2.3"
+ipython = "^8.14.0"
+types-python-dateutil = "^2.8.19.14"
+pytest-coverage = "^0.0"
+requests = "^2.31.0"
+safety = "^2.3.5"
+time-machine = "^2.12.0"
+assertpy = "^1.1"
+types-redis = "^4.6.0.3"
+pyupgrade = "^3.10.1"
+pyupgrade-directories = "^0.3.0"
+ruff = "0.0.292"
+mypy = "^1.9.0"
+
+
+[tool.black]
+line-length = 120
+target-version = ['py311']
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | docker
+  # The following are specific to Black, you probably don't want those.
+  | profiling
+)/
+'''
+
+[tool.isort]
+profile = "black"
+skip = "setup.py,env,.tox, venv, .venv,"
+
+[tool.flake8]
+max-line-length = 120
+ignore = ["S101", "B008", "ANN101", "ANN102", "ANN401", "W503", "S402", "S321", "VNE003", "T101", "PT022", "G200"]
+
+[tool.autoflake]
+check = true
+imports = ["requests", "urllib3"]
+exclude = ".git,.idea,.pytest_cache,__pycache__,logs,static,test/reports,venv,alembic/versions"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+testpaths = "tests"
+filterwarnings = '''
+  error
+  ignore::DeprecationWarning
+'''
+
+addopts = '''
+  --strict-markers
+  --tb=short
+  --cov=app
+  --cov=tests
+  --cov-branch
+  --cov-report=term-missing
+  --cov-report=xml
+  --no-cov-on-fail
+  --cov-fail-under=90
+  --cov-config=.coveragerc
+'''
+
+[tool.coverage.run]
+omit = [
+    "app/factories/utils.py",
+    "app/clients/base_client.py",
+    "app/constants.py",
+    "app/exceptions.py",
+    "app/log_handler.py",
+    "app/xjson.py",
+    "app/models/models.py",
+    "app/schemas/*",
+    "tests/tests_integration/test_utils.py",
+]
+
+[tool.mypy]
+plugins = ["pydantic.mypy"]
+ignore_missing_imports = true
+exclude = [
+    "^alembic/.+$",
+]
+
+follow_imports = "silent"
+warn_redundant_casts = true
+warn_unused_ignores = true
+disallow_any_generics = true
+check_untyped_defs = true
+no_implicit_reexport = true
+
+# for strict mypy: (this is the tricky one :-))
+disallow_untyped_defs = true
+
+[tool.pydantic-mypy]
+warn_required_dynamic_aliases = false
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.ruff]
+# see ruff configuration https://docs.astral.sh/ruff/configuration/
+target-version = "py311"
+line-length = 120
+select = [
+    "F", # https://beta.ruff.rs/docs/rules/#pyflakes-f
+    "E", # https://docs.astral.sh/ruff/rules/#error-e
+    "W", # https://docs.astral.sh/ruff/rules/#warning-w
+    "C90", # https://docs.astral.sh/ruff/rules/#mccabe-c90
+    "I", # https://docs.astral.sh/ruff/rules/#isort-i
+    "N", # https://docs.astral.sh/ruff/rules/#pep8-naming-n
+    "D", # https://docs.astral.sh/ruff/rules/#pydocstyle-d
+    "UP", # https://docs.astral.sh/ruff/rules/#pyupgrade-up
+    "YTT", # https://docs.astral.sh/ruff/rules/#flake8-2020-ytt
+    "ANN", # https://docs.astral.sh/ruff/rules/#flake8-annotations-ann
+    "ASYNC", # https://docs.astral.sh/ruff/rules/#flake8-async-async
+    "S", # https://docs.astral.sh/ruff/rules/#flake8-bandit-s
+    "BLE", # https://docs.astral.sh/ruff/rules/#flake8-blind-except-ble
+    "FBT", # https://docs.astral.sh/ruff/rules/#flake8-boolean-trap-fbt
+    "B", # https://docs.astral.sh/ruff/rules/#flake8-bugbear-b
+    "A", # https://docs.astral.sh/ruff/rules/#flake8-builtins-a
+    "COM", # https://docs.astral.sh/ruff/rules/#flake8-commas-com
+    "C4", # https://docs.astral.sh/ruff/rules/#flake8-comprehensions-c4
+    "DTZ", # https://docs.astral.sh/ruff/rules/#flake8-datetimez-dtz
+    "T10", # https://docs.astral.sh/ruff/rules/#flake8-debugger-t10
+    "EM", # https://docs.astral.sh/ruff/rules/#flake8-errmsg-em
+    "EXE", # https://docs.astral.sh/ruff/rules/#flake8-executable-exe
+    "FA", # https://docs.astral.sh/ruff/rules/#flake8-future-annotations-fa
+    "ISC", # https://docs.astral.sh/ruff/rules/#flake8-implicit-str-concat-isc
+    "ICN", # https://docs.astral.sh/ruff/rules/#flake8-import-conventions-icn
+    "G", # https://docs.astral.sh/ruff/rules/#flake8-logging-format-g
+    "INP", # https://docs.astral.sh/ruff/rules/#flake8-no-pep420-inp
+    "PIE", # https://docs.astral.sh/ruff/rules/#flake8-pie-pie
+    "T20", # https://docs.astral.sh/ruff/rules/#flake8-print-t20
+    "PYI", # https://docs.astral.sh/ruff/rules/#flake8-pyi-pyi
+    "PT", # https://docs.astral.sh/ruff/rules/#flake8-pytest-style-pt
+    "Q", # https://docs.astral.sh/ruff/rules/#flake8-quotes-q
+    "RSE", # https://docs.astral.sh/ruff/rules/#flake8-raise-rse
+    "RET", # https://docs.astral.sh/ruff/rules/#flake8-return-ret
+    "SLF", # https://docs.astral.sh/ruff/rules/#flake8-self-slf
+    "SLOT", # https://docs.astral.sh/ruff/rules/#flake8-slots-slot
+    "SIM", # https://docs.astral.sh/ruff/rules/#flake8-simplify-sim
+    "TID", # https://docs.astral.sh/ruff/rules/#flake8-tidy-imports-tid
+    "TCH", # https://docs.astral.sh/ruff/rules/#flake8-type-checking-tch
+    "INT", # https://docs.astral.sh/ruff/rules/#flake8-gettext-int
+    "ARG", # https://docs.astral.sh/ruff/rules/#flake8-unused-arguments-arg
+    "PTH", # https://docs.astral.sh/ruff/rules/#flake8-use-pathlib-pth
+    "TD", # https://docs.astral.sh/ruff/rules/#flake8-todos-td
+    "FIX", # https://docs.astral.sh/ruff/rules/#flake8-fixme-fix
+    "ERA", # https://docs.astral.sh/ruff/rules/#eradicate-era
+    "PD", # https://docs.astral.sh/ruff/rules/#pandas-vet-pd
+    "PGH", # https://docs.astral.sh/ruff/rules/#pygrep-hooks-pgh
+    "PL", # https://docs.astral.sh/ruff/rules/#pylint-pl
+    "TRY", # https://docs.astral.sh/ruff/rules/#tryceratops-try
+    "FLY", # https://docs.astral.sh/ruff/rules/#flynt-fly
+    "AIR", # https://docs.astral.sh/ruff/rules/#airflow-air
+    "PERF", # https://docs.astral.sh/ruff/rules/#perflint-perf
+    "RUF", # https://docs.astral.sh/ruff/rules/#ruff-specific-rules-ruf
+]
+ignore = [
+    "S101",
+    "B008",
+    "ANN002",
+    "ANN003",
+    "ANN101",
+    "ANN102",
+    "ANN401",
+    "S321",
+    "PT022",
+    "D100",
+    "D101",
+    "D102",
+    "D103",
+    "D104",
+    "D211",
+    "D213",
+    "D107",
+    "D205",
+    "PLR0913",
+]
+
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".gitlab",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".idea",
+    "dist",
+    "docker",
+    "__pypackages__",
+    "__pycache__",
+    "_build",
+    "venv",
+    "alembic",
+    # The following are specific to Black tool
+    "profiling"
+]
+
+[tool.ruff.per-file-ignores]
+"*/__init__.py" = [
+    "F401",
+]
+
+[tool.ruff.flake8-quotes]
+docstring-quotes = "double"
+inline-quotes = "double"
+multiline-quotes = "double"
+
+[tool.ruff.isort]
+case-sensitive = true
+
+
+[tool.ruff.pep8-naming]
+classmethod-decorators = [
+    "classmethod",
+]

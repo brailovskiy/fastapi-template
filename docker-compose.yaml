@@ -1,0 +1,46 @@
+services:
+
+  postgres:
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    tmpfs:
+      - /run
+      - /var/run
+      - /tmp
+    env_file:
+      - settings/.env.local
+    environment:
+      - POSTGRES_INITDB_ARGS=--nosync
+    command: >
+      postgres
+        -c fsync=off
+        -c synchronous_commit=off
+        -c full_page_writes=off
+        -c log_statement=none
+        -c logging_collector=off
+        -c log_min_duration_statement=-1
+        -c log_min_error_statement=panic
+    logging:
+      driver: none
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  postgres-test:
+    image: postgres:16
+    ports:
+      - "5431:5432"
+    env_file:
+      - settings/.env.test
+    environment:
+      - POSTGRES_INITDB_ARGS=--nosync
+
+
+volumes:
+  postgres_data:
