@@ -1,4 +1,4 @@
-FROM python:3.11-slim-bullseye as compile-image
+FROM 3.14.4-trixie as compile-image
 WORKDIR /app/
 
 ENV PYTHONUNBUFFERED=1 \
