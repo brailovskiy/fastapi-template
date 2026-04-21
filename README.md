@@ -5,8 +5,11 @@
 ### Install pyenv (optional step)
 
 1. install [pyenv](https://github.com/pyenv/pyenv) to system (if not)
-2. install [python 3.12](https://www.python.org/downloads/release/python-3120/) with pyenv
-3. setup pyenv for use python 3.12 in project folder
+2. install [python 3.14](https://www.python.org/downloads/) with pyenv
+3. setup pyenv for use python 3.14 in project folder
+
+### Install python (required)
+1. install [python 3.14](https://www.python.org/downloads/)
 
 ### Install project
 
