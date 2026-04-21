@@ -32,7 +32,7 @@ class Application:
     async def lifespan(self, app: FastAPI):
         self.create_database_pool()
         yield
-        self.close_database_pool()
+        await self.close_database_pool()
 
     def register_urls(self) -> None:
         self.app.include_router(system_router, prefix="/api/v1")
@@ -58,11 +58,11 @@ class Application:
             databases[db_alias] = db
         self.app.state.databases = databases
 
-    def close_database_pool(self) -> None:
+    async def close_database_pool(self) -> None:
         for db_alias, db in self.app.state.databases.items():
             logger.info("closing database pool for db {}", db_alias)
             try:
-                db.disconnect()
+                await db.disconnect()
             except Exception as exc:
                 logger.warning(
                     "failed to close database pool {} due to {}",

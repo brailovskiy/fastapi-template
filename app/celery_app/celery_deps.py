@@ -14,7 +14,17 @@ class CeleryTask(Task):
     def __init__(self) -> None:
         self.settings: Settings = get_settings()
         self.database: Database = get_database()
-        self.loop = asyncio.get_event_loop()
+        self._loop = None
+
+    @property
+    def loop(self):
+        if self._loop is None:
+            try:
+                self._loop = asyncio.get_event_loop()
+            except RuntimeError:
+                self._loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(self._loop)
+        return self._loop
 
 
 def get_database(db_alias: str = "POSTGRES") -> Database:

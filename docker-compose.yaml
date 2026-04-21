@@ -1,7 +1,7 @@
 services:
 
   postgres:
-    image: postgres:16
+    image: postgres:18.3-alpine
     ports:
       - "5432:5432"
     volumes:
@@ -27,13 +27,13 @@ services:
       driver: none
 
   rabbitmq:
-    image: rabbitmq:3.13-management
+    image: rabbitmq:4.2.5-management
     ports:
       - "5672:5672"
       - "15672:15672"
 
   postgres-test:
-    image: postgres:16
+    image: postgres:18.3-alpine
     ports:
       - "5431:5432"
     env_file:
