@@ -1,3 +1,5 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, __version__
 from loguru import logger
 from uvicorn import Config, Server
@@ -18,17 +20,19 @@ class Application:
             title="Backend template",
             description="Template service",
             debug=config.DEBUG,
+            lifespan=self.lifespan,
         )
 
         self.add_middlewares(config)
         self.register_urls()
-        self.configure_hooks()
 
         return self.app
 
-    def configure_hooks(self) -> None:
-        self.app.add_event_handler("startup", self.create_database_pool)
-        self.app.add_event_handler("shutdown", self.close_database_pool)
+    @asynccontextmanager
+    async def lifespan(self, app: FastAPI):
+        self.create_database_pool()
+        yield
+        self.close_database_pool()
 
     def register_urls(self) -> None:
         self.app.include_router(system_router, prefix="/api/v1")
@@ -54,11 +58,11 @@ class Application:
             databases[db_alias] = db
         self.app.state.databases = databases
 
-    async def close_database_pool(self) -> None:
+    def close_database_pool(self) -> None:
         for db_alias, db in self.app.state.databases.items():
             logger.info("closing database pool for db {}", db_alias)
             try:
-                await db.disconnect()
+                db.disconnect()
             except Exception as exc:
                 logger.warning(
                     "failed to close database pool {} due to {}",
