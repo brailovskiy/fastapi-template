@@ -1,10 +1,10 @@
-FROM 3.14.4-trixie as compile-image
+FROM python:3.14-slim-trixie as compile-image
 WORKDIR /app/
 
 ENV PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
     DOCKER_CONTAINER=1 \
-    POETRY_VERSION=1.8.2
+    POETRY_VERSION=2.3.4
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends gcc git ssh \

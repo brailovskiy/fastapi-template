@@ -1,4 +1,5 @@
 [tool.poetry]
+package-mode = false
 name = "fast-api-template"
 version = "0.1.0"
 description = ""
@@ -23,6 +24,7 @@ polyfactory = "^3.3.0"
 sentry-sdk = "^2.58.0"
 redis = "^7.4.0"
 more-itertools = "^11.0.2"
+greenlet = ">=3.4.0"
 
 
 
