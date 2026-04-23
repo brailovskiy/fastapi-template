@@ -42,39 +42,6 @@ ruff = "^0.15.11"
 mypy = "^1.20.1"
 
 
-[tool.black]
-line-length = 120
-target-version = ['py311']
-exclude = '''
-/(
-    \.eggs
-  | \.git
-  | \.hg
-  | \.mypy_cache
-  | \.venv
-  | _build
-  | buck-out
-  | build
-  | dist
-  | docker
-  # The following are specific to Black, you probably don't want those.
-  | profiling
-)/
-'''
-
-[tool.isort]
-profile = "black"
-skip = "setup.py,env,.tox, venv, .venv,"
-
-[tool.flake8]
-max-line-length = 120
-ignore = ["S101", "B008", "ANN101", "ANN102", "ANN401", "W503", "S402", "S321", "VNE003", "T101", "PT022", "G200"]
-
-[tool.autoflake]
-check = true
-imports = ["requests", "urllib3"]
-exclude = ".git,.idea,.pytest_cache,__pycache__,logs,static,test/reports,venv,alembic/versions"
-
 [tool.pytest.ini_options]
 minversion = "6.0"
 testpaths = "tests"
@@ -136,7 +103,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
 # see ruff configuration https://docs.astral.sh/ruff/configuration/
-target-version = "py311"
+target-version = "py314"
 line-length = 120
 select = [
     "F", # https://beta.ruff.rs/docs/rules/#pyflakes-f
